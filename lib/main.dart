@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => SplashPage(),
         '/login': (context) => LoginPage(),
+        '/chat': (context) => ChatRoomPage(),
       },
     );
   }

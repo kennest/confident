@@ -19,29 +19,45 @@ class _HomePageState extends State<HomePage> {
         Stack(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(10.0,180.0,10.0,0.0),
+              padding: EdgeInsets.fromLTRB(10.0, 180.0, 10.0, 0.0),
               height: 650.0,
               width: double.infinity,
-              color: Color.fromARGB(30, 3, 69,101),
+              color: Color.fromARGB(30, 3, 69, 101),
               child: ListView(
                   itemExtent: 55.0,
-                  padding: EdgeInsets.fromLTRB(0.0,0.0,0.0,50.0),
-                  children: <Widget>[
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 2),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 2),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 4),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 5),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 3),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 3),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 4),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
-                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 5),
-                  ],
-                ),
+                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 50.0),
+                  children: ListTile.divideTiles(
+                    //          <-- ListTile.divideTiles
+                    context: context,
+                    tiles: [
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 1),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 2),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 2),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 1),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 4),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 1),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 5),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 3),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 3),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 1),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 4),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 1),
+                      chatItem("+225 08 00 00 00",
+                          "Ceci est un message fictif...", 5),
+                    ],
+                  ).toList()),
             ),
             Container(
               width: double.infinity,
@@ -116,44 +132,57 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: 40.0,
                   ),
-                  Container(
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: Colors.blue,
-                          border: new Border.all(color: Colors.white)),
-                      child: Column(
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(
-                              Icons.call,
-                              color: Colors.white,
+                  InkWell(
+                    splashColor: Colors.white,
+                    child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: Colors.blue,
+                            border: new Border.all(color: Colors.white)),
+                        child: Column(
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(
+                                Icons.call,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {},
                             ),
-                            onPressed: () {},
-                          ),
-                          Text(
-                            "Calls",
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
-                      )),
+                            Text(
+                              "Calls",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        )),
+                    onTap: (){},
+                  )
                 ],
               ),
             )
           ],
         ),
       ],
-    ));
+    ),
+    floatingActionButton: FloatingActionButton(
+      child: Icon(Icons.chat),
+      onPressed: (){},
+    ),);
   }
 
-  Widget chatItem(String title,String subtitle,int num){
+  Widget chatItem(String title, String subtitle, int num) {
     return ListTile(
       leading: CircleAvatar(
         child: Image.asset('assets/images/user_item_$num.png'),
       ),
-      title: Text(title,style: TextStyle(fontWeight: FontWeight.bold),),
+      title: Text(
+        title,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       subtitle: Text('$subtitle      08:50'),
-      onTap: (){},
+      onTap: () {
+        Navigator.pushNamed(context, "/chat");
+      },
     );
   }
 }
