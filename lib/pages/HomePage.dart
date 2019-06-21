@@ -1,6 +1,11 @@
+import 'package:confident/models/user.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  final User user;
+
+  const HomePage({Key key, this.user}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -8,6 +13,147 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+        body: ListView(
+      children: <Widget>[
+        Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(10.0,180.0,10.0,0.0),
+              height: 650.0,
+              width: double.infinity,
+              color: Color.fromARGB(30, 3, 69,101),
+              child: ListView(
+                  itemExtent: 55.0,
+                  padding: EdgeInsets.fromLTRB(0.0,0.0,0.0,50.0),
+                  children: <Widget>[
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 2),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 2),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 4),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 5),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 3),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 3),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 4),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 1),
+                    chatItem("+225 08 00 00 00", "Ceci est un message fictif...", 5),
+                  ],
+                ),
+            ),
+            Container(
+              width: double.infinity,
+              height: 100.0,
+              child: AppBar(
+                title: Text('Conversation'),
+                backgroundColor: Colors.transparent,
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {},
+                  ),
+                  IconButton(icon: Icon(Icons.more_vert), onPressed: () {})
+                ],
+              ),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      colorFilter: new ColorFilter.mode(
+                          Colors.blue.withOpacity(0.5), BlendMode.srcATop),
+                      image: AssetImage('assets/images/home_header_bg.png'))),
+            ),
+            Positioned(
+              top: 70.0,
+              left: 35.0,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: new Border.all(color: Colors.white)),
+                      child: Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(
+                              Icons.chat_bubble,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {},
+                          ),
+                          Text(
+                            "Chats",
+                            style: TextStyle(color: Colors.white),
+                          )
+                        ],
+                      )),
+                  SizedBox(
+                    width: 40.0,
+                  ),
+                  Container(
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: Colors.blue,
+                          border: new Border.all(color: Colors.white)),
+                      child: Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {},
+                          ),
+                          Text(
+                            "Stories",
+                            style: TextStyle(color: Colors.white),
+                          )
+                        ],
+                      )),
+                  SizedBox(
+                    width: 40.0,
+                  ),
+                  Container(
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: Colors.blue,
+                          border: new Border.all(color: Colors.white)),
+                      child: Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(
+                              Icons.call,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {},
+                          ),
+                          Text(
+                            "Calls",
+                            style: TextStyle(color: Colors.white),
+                          )
+                        ],
+                      )),
+                ],
+              ),
+            )
+          ],
+        ),
+      ],
+    ));
+  }
+
+  Widget chatItem(String title,String subtitle,int num){
+    return ListTile(
+      leading: CircleAvatar(
+        child: Image.asset('assets/images/user_item_$num.png'),
+      ),
+      title: Text(title,style: TextStyle(fontWeight: FontWeight.bold),),
+      subtitle: Text('$subtitle      08:50'),
+      onTap: (){},
+    );
   }
 }

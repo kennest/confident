@@ -1,7 +1,16 @@
+import 'package:confident/bloc/auth/auth_event.dart';
+import 'package:confident/bloc/auth/auth_state.dart';
+import 'package:confident/bloc/auth/bloc.dart';
+import 'package:confident/models/user.dart';
+import 'package:confident/pages/HomePage.dart';
+import 'package:confident/pages/SplashPage.dart';
+import 'package:confident/repository/userRepository.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,11 +19,44 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   Country _selected;
+  String countryCode;
+  String smsCode = "";
+  num phoneNo;
+  var controller = TextEditingController();
+  UserRepository userRepository;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    userRepository=UserRepository();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      builder: (_) => userRepository,
+      child: Consumer(
+        builder: (context, UserRepository user, _) {
+          switch (user.status) {
+            case Status.Uninitialized:
+              return main();
+            case Status.Unauthenticated:
+              return main();
+            case Status.Authenticating:
+             return Center(
+               child: CircularProgressIndicator(),
+             );
+            case Status.Authenticated:
+              return HomePage(user: user.user,);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget main() {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       body: Container(
         padding: EdgeInsets.fromLTRB(45.0, 50.0, 45.0, 0.0),
         decoration: BoxDecoration(
@@ -62,9 +104,11 @@ class _LoginPageState extends State<LoginPage> {
               },
               selectedCountry: _selected,
             ),
-            TextField(
+            TextFormField(
                 keyboardType: TextInputType.number,
                 style: TextStyle(color: Colors.white),
+                controller: controller,
+                onSaved: (input) => phoneNo = num.tryParse(input),
                 decoration: InputDecoration(
                   hintStyle: TextStyle(color: Colors.white),
                   enabledBorder: OutlineInputBorder(
@@ -85,7 +129,11 @@ class _LoginPageState extends State<LoginPage> {
                     "Suivant",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () {},
+                  onPressed: () async{
+                    //print( '$_selected.dialingCode  ${num.tryParse(controller.text).toString()}');
+                    User u=User();
+                    await userRepository.signIn(u);
+                  },
                   borderSide: BorderSide(color: Colors.white),
                   shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(30.0))),
@@ -104,6 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                       size: 20.0,
                       color: Colors.white,
                     ),
+                    borderSide: BorderSide(color: Colors.white),
                     onPressed: () {},
                     shape: CircleBorder(side: BorderSide(color: Colors.white))),
                 OutlineButton.icon(
@@ -115,6 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     ),
                     onPressed: () {},
+                    borderSide: BorderSide(color: Colors.white),
                     shape: CircleBorder(side: BorderSide(color: Colors.white))),
                 OutlineButton.icon(
                     padding: EdgeInsets.fromLTRB(7.0, 0.0, 0.0, 0.0),
@@ -125,6 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     ),
                     onPressed: () {},
+                    borderSide: BorderSide(color: Colors.white),
                     shape: CircleBorder(side: BorderSide(color: Colors.white)))
               ],
             )
@@ -132,5 +183,47 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  //Show confirmation code dialog
+  _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text("Entrer le code recu par sms:"),
+          content: TextField(
+            onChanged: (value) {
+              smsCode = value;
+            },
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text("Envoyer"),
+              onPressed: () {
+                BlocProvider.of<AuthBloc>(context)
+                    .dispatch(SendSmsCodeEvent(smsCode));
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }
