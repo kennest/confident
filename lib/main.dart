@@ -1,14 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:confident/pages/ChatRoomPage.dart';
 import 'package:confident/pages/LoginPage.dart';
 import 'package:confident/pages/SplashPage.dart';
 import 'package:flutter/material.dart';
 
-import 'bloc/simple_bloc_delegate.dart';
-import 'pages/HomePage.dart';
-
 void main() {
-  BlocSupervisor.delegate = SimpleBlocDelegate();
   runApp(MyApp());
 }
 

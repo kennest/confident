@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Scaffold(
         body: ListView(
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                   image: DecorationImage(
                       colorFilter: new ColorFilter.mode(
                           Colors.blue.withOpacity(0.5), BlendMode.srcATop),
-                      image: AssetImage('assets/images/home_header_bg.png'))),
+                      image: AssetImage('assets/images/home_header_bg.png'),fit: BoxFit.cover)),
             ),
             Positioned(
               top: 70.0,

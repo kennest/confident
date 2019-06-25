@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:confident/models/user.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
@@ -15,10 +16,15 @@ class AuthService {
     response = await http.post("http://178.33.130.202:8000/login/",
         body: {'username': u.email, 'password': u.password});
     print(response.body);
-    databaseReference
+    try{
+   databaseReference
         .child("data")
     .child(u.email)
         .set({'title': 'Mastering EJB', 'description': response.body});
+    }on PlatformException{
+      print("PlatForm Exception->");
+    }
+ 
     //u=json.decode(response.body);
     return u;
   }

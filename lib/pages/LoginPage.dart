@@ -1,16 +1,13 @@
-import 'package:confident/bloc/auth/auth_event.dart';
-import 'package:confident/bloc/auth/auth_state.dart';
-import 'package:confident/bloc/auth/bloc.dart';
+import 'dart:isolate';
+
 import 'package:confident/models/user.dart';
-import 'package:confident/pages/HomePage.dart';
-import 'package:confident/pages/SplashPage.dart';
+import 'package:confident/pages/pages.dart';
 import 'package:confident/repository/userRepository.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -57,7 +54,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget main() {
     return Scaffold(
-      body: Container(
+      body: SingleChildScrollView(
+        child:Container(
         padding: EdgeInsets.fromLTRB(45.0, 50.0, 45.0, 0.0),
         decoration: BoxDecoration(
             image: DecorationImage(
@@ -182,6 +180,7 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
+      )
     );
   }
 
@@ -210,8 +209,6 @@ class _LoginPageState extends State<LoginPage> {
             new FlatButton(
               child: new Text("Envoyer"),
               onPressed: () {
-                BlocProvider.of<AuthBloc>(context)
-                    .dispatch(SendSmsCodeEvent(smsCode));
                 Navigator.of(context).pop();
               },
             ),
