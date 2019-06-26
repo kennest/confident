@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child:Container(
-        padding: EdgeInsets.fromLTRB(45.0, 50.0, 45.0, 0.0),
+        padding: EdgeInsets.fromLTRB(45.0, 50.0, 45.0, 80.0),
         decoration: BoxDecoration(
             image: DecorationImage(
                 colorFilter: new ColorFilter.mode(

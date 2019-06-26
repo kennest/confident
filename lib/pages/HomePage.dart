@@ -1,4 +1,5 @@
 import 'package:confident/models/user.dart';
+import 'package:confident/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,37 +25,37 @@ class _HomePageState extends State<HomePage> {
               width: double.infinity,
               color: Color.fromARGB(30, 3, 69, 101),
               child: ListView(
-                  itemExtent: 55.0,
+                  itemExtent: 70.0,
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 50.0),
                   children: ListTile.divideTiles(
                     //          <-- ListTile.divideTiles
                     context: context,
                     tiles: [
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 01 00 05",
                           "Ceci est un message fictif...", 1),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 09 00 08 40",
                           "Ceci est un message fictif...", 2),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 10 00 00",
                           "Ceci est un message fictif...", 2),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 00 10 00",
                           "Ceci est un message fictif...", 1),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 50 00 02",
                           "Ceci est un message fictif...", 4),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 09 50 00 08",
                           "Ceci est un message fictif...", 1),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 07 00 07",
                           "Ceci est un message fictif...", 5),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 08 00 07",
                           "Ceci est un message fictif...", 3),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 08 00 10",
                           "Ceci est un message fictif...", 3),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 40 00 30",
                           "Ceci est un message fictif...", 1),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 20 00 80",
                           "Ceci est un message fictif...", 4),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 60 00 50",
                           "Ceci est un message fictif...", 1),
-                      chatItem("+225 08 00 00 00",
+                      chatItem("+225 08 20 05 40",
                           "Ceci est un message fictif...", 5),
                     ],
                   ).toList()),
@@ -170,18 +171,23 @@ class _HomePageState extends State<HomePage> {
     ),);
   }
 
-  Widget chatItem(String title, String subtitle, int num) {
+  Widget chatItem(String peerId, String subtitle, int num) {
     return ListTile(
       leading: CircleAvatar(
         child: Image.asset('assets/images/user_item_$num.png'),
       ),
       title: Text(
-        title,
+        peerId,
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text('$subtitle      08:50'),
       onTap: () {
-        Navigator.pushNamed(context, "/chat");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatRoomPage(peerId:peerId ,peerAvatar: "assets/images/logo.png",),
+          ),
+        );
       },
     );
   }
