@@ -74,7 +74,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   Future getImage() async {
     imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-
     if (imageFile != null) {
       setState(() {
         isLoading = true;
