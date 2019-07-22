@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:confident/models/user.dart';
 import 'package:flutter/services.dart';
@@ -7,31 +8,26 @@ import 'package:http/http.dart' as http;
 class AuthService {
   http.Response response;
   User u;
-  final databaseReference = FirebaseDatabase.instance.reference();
 
   //Launch login
   Future<User> doLogin(User u) async {
-    u.email = "lightbot78";
-    u.password = "kenny1990";
-    response = await http.post("http://178.33.130.202:8000/login/",
-        body: {'username': u.email, 'password': u.password});
-    print(response.body);
-    try{
-   databaseReference
-        .child("data")
-    .child(u.email)
-        .set({'title': 'Mastering EJB', 'description': response.body});
-    }on PlatformException{
-      print("PlatForm Exception->");
-    }
- 
+    var userDocument = Firestore.instance.collection('users').document(u.phone);
+
+    Firestore.instance.runTransaction((transaction) async {
+      await transaction.set(
+        userDocument,
+        {
+          'age': 0,
+          'country': u.country,
+          'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
+          'username': u.phone,
+          'avatar': u.avatar,
+          'phone': u.phone
+        },
+      );
+    });
+
     //u=json.decode(response.body);
     return u;
-  }
-
-  void getData() {
-    databaseReference.child('data').once().then((DataSnapshot snapshot) {
-      print('Data : ${snapshot.value}');
-    });
   }
 }

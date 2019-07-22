@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 class User with ChangeNotifier {
-  String email;
+  String phone;
   String username;
   String avatar;
-  String password;
+  String country;
+  int age;
 }

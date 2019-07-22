@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:confident/models/user.dart';
 import 'package:confident/pages/pages.dart';
 import 'package:confident/repository/userRepository.dart';
@@ -16,9 +14,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   Country _selected;
+  User _user;
   String countryCode;
   String smsCode = "";
-  num phoneNo;
+  String phoneNo;
   var controller = TextEditingController();
   UserRepository userRepository;
 
@@ -26,7 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    userRepository=UserRepository();
+    userRepository = UserRepository();
+    _user = User();
   }
 
   @override
@@ -41,11 +41,14 @@ class _LoginPageState extends State<LoginPage> {
             case Status.Unauthenticated:
               return main();
             case Status.Authenticating:
-             return Center(
-               child: CircularProgressIndicator(),
-             );
+              return Container(
+                  child: Center(
+                child: CircularProgressIndicator(),
+              ));
             case Status.Authenticated:
-              return HomePage(user: user.user,);
+              return HomePage(
+                user: user.user,
+              );
           }
         },
       ),
@@ -54,8 +57,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget main() {
     return Scaffold(
-      body: SingleChildScrollView(
-        child:Container(
+        body: SingleChildScrollView(
+      child: Container(
         padding: EdgeInsets.fromLTRB(45.0, 50.0, 45.0, 80.0),
         decoration: BoxDecoration(
             image: DecorationImage(
@@ -98,15 +101,15 @@ class _LoginPageState extends State<LoginPage> {
               onChanged: (Country country) {
                 setState(() {
                   _selected = country;
+                  _user.country = _selected.name;
                 });
               },
               selectedCountry: _selected,
             ),
             TextFormField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.phone,
                 style: TextStyle(color: Colors.white),
                 controller: controller,
-                onSaved: (input) => phoneNo = num.tryParse(input),
                 decoration: InputDecoration(
                   hintStyle: TextStyle(color: Colors.white),
                   enabledBorder: OutlineInputBorder(
@@ -127,10 +130,11 @@ class _LoginPageState extends State<LoginPage> {
                     "Suivant",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () async{
+                  onPressed: () async {
                     //print( '$_selected.dialingCode  ${num.tryParse(controller.text).toString()}');
-                    User u=User();
-                    await userRepository.signIn(u);
+                    _user.phone =
+                        "+${_selected.dialingCode} ${controller.text}";
+                    await userRepository.signIn(_user);
                   },
                   borderSide: BorderSide(color: Colors.white),
                   shape: new RoundedRectangleBorder(
@@ -180,8 +184,7 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-      )
-    );
+    ));
   }
 
   //Show confirmation code dialog

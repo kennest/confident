@@ -8,7 +8,7 @@ class UserRepository with ChangeNotifier {
   User _user;
   Status _status = Status.Uninitialized;
   bool _authenticated;
-  var authService=AuthService();
+  var authService = AuthService();
 
   Status get status => _status;
   User get user => _user;
@@ -20,9 +20,8 @@ class UserRepository with ChangeNotifier {
       _status = Status.Authenticating;
       print("Authenticating");
       notifyListeners();
-      _user=await authService.doLogin(u);
-      authService.getData();
-      if(_user!=null){
+      _user = await authService.doLogin(u);
+      if (_user != null) {
         _status = Status.Authenticated;
         print("Authenticated");
         notifyListeners();

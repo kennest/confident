@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-class UI {
 
+class UI {
   //To generate an AppBar for the whole application
-  Widget appBar(String title,List<Widget> actions){
+  Widget appBar(String title, List<Widget> actions) {
     return AppBar(
       actions: actions,
       title: Text(title),
@@ -10,4 +10,3 @@ class UI {
     );
   }
 }
-

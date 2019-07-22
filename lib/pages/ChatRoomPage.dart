@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:confident/repository/chatRepository.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,11 +15,13 @@ class ChatRoomPage extends StatefulWidget {
 
   const ChatRoomPage({Key key, this.peerId, this.peerAvatar}) : super(key: key);
   @override
-  _ChatRoomPageState createState() =>  _ChatRoomPageState(peerId: peerId, peerAvatar: peerAvatar);
+  _ChatRoomPageState createState() =>
+      _ChatRoomPageState(peerId: peerId, peerAvatar: peerAvatar);
 }
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
-  _ChatRoomPageState({Key key, @required this.peerId, @required this.peerAvatar});
+  _ChatRoomPageState(
+      {Key key, @required this.peerId, @required this.peerAvatar});
 
   String peerId;
   String peerAvatar;
@@ -32,8 +35,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   bool isLoading;
   bool isShowSticker;
   String imageUrl;
+  //ChatRepository chatRepository;
 
-  final TextEditingController textEditingController = new TextEditingController();
+  final TextEditingController textEditingController =
+      new TextEditingController();
   final ScrollController listScrollController = new ScrollController();
   final FocusNode focusNode = new FocusNode();
 
@@ -49,6 +54,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     imageUrl = '';
 
     readLocal();
+    //chatRepository = new ChatRepository(id, this.peerId);
   }
 
   void onFocusChange() {
@@ -111,6 +117,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   void onSendMessage(String content, int type) {
     // type: 0 = text, 1 = image, 2 = sticker
+
     if (content.trim() != '') {
       textEditingController.clear();
 
@@ -132,7 +139,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           },
         );
       });
-      listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      listScrollController.animateTo(0.0,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
     }
@@ -152,8 +160,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                   width: 200.0,
-                  decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(8.0)),
-                  margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  margin: EdgeInsets.only(
+                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                      right: 10.0),
                 )
               : document['type'] == 1
                   // Image
@@ -161,31 +173,32 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       child: Material(
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
-                                ),
-                                width: 200.0,
-                                height: 200.0,
-                                padding: EdgeInsets.all(70.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                ),
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.amber),
+                            ),
+                            width: 200.0,
+                            height: 200.0,
+                            padding: EdgeInsets.all(70.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
                               ),
+                            ),
+                          ),
                           errorWidget: (context, url, error) => Material(
-                                child: Image.asset(
-                                  'assets/images/img_not_available.jpeg',
-                                  width: 200.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                              ),
+                            child: Image.asset(
+                              'assets/images/img_not_available.jpeg',
+                              width: 200.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                          ),
                           imageUrl: document['content'],
                           width: 200.0,
                           height: 200.0,
@@ -194,7 +207,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         borderRadius: BorderRadius.all(Radius.circular(8.0)),
                         clipBehavior: Clip.hardEdge,
                       ),
-                      margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                      margin: EdgeInsets.only(
+                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                          right: 10.0),
                     )
                   // Sticker
                   : Container(
@@ -204,7 +219,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         height: 100.0,
                         fit: BoxFit.cover,
                       ),
-                      margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                      margin: EdgeInsets.only(
+                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                          right: 10.0),
                     ),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
@@ -220,14 +237,15 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     ? Material(
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 1.0,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
-                                ),
-                                width: 35.0,
-                                height: 35.0,
-                                padding: EdgeInsets.all(10.0),
-                              ),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 1.0,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.amber),
+                            ),
+                            width: 35.0,
+                            height: 35.0,
+                            padding: EdgeInsets.all(10.0),
+                          ),
                           imageUrl: peerAvatar,
                           width: 35.0,
                           height: 35.0,
@@ -247,7 +265,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         ),
                         padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                         width: 200.0,
-                        decoration: BoxDecoration(color: Colors.purple, borderRadius: BorderRadius.circular(8.0)),
+                        decoration: BoxDecoration(
+                            color: Colors.purple,
+                            borderRadius: BorderRadius.circular(8.0)),
                         margin: EdgeInsets.only(left: 10.0),
                       )
                     : document['type'] == 1
@@ -255,37 +275,39 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                             child: Material(
                               child: CachedNetworkImage(
                                 placeholder: (context, url) => Container(
-                                      child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                                      ),
-                                      width: 200.0,
-                                      height: 200.0,
-                                      padding: EdgeInsets.all(70.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(8.0),
-                                        ),
-                                      ),
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.blue),
+                                  ),
+                                  width: 200.0,
+                                  height: 200.0,
+                                  padding: EdgeInsets.all(70.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
                                     ),
+                                  ),
+                                ),
                                 errorWidget: (context, url, error) => Material(
-                                      child: Image.asset(
-                                        'assets/images/img_not_available.jpeg',
-                                        width: 200.0,
-                                        height: 200.0,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                      clipBehavior: Clip.hardEdge,
-                                    ),
+                                  child: Image.asset(
+                                    'assets/images/img_not_available.jpeg',
+                                    width: 200.0,
+                                    height: 200.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
                                 imageUrl: document['content'],
                                 width: 200.0,
                                 height: 200.0,
                                 fit: BoxFit.cover,
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0)),
                               clipBehavior: Clip.hardEdge,
                             ),
                             margin: EdgeInsets.only(left: 10.0),
@@ -297,18 +319,23 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                               height: 100.0,
                               fit: BoxFit.cover,
                             ),
-                            margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                            margin: EdgeInsets.only(
+                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                                right: 10.0),
                           ),
               ],
             ),
-
             // Time
             isLastMessageLeft(index)
                 ? Container(
                     child: Text(
-                      DateFormat('dd MMM kk:mm')
-                          .format(DateTime.fromMillisecondsSinceEpoch(int.parse(document['timestamp']))),
-                      style: TextStyle(color: Colors.grey, fontSize: 12.0, fontStyle: FontStyle.italic),
+                      DateFormat('dd MMM kk:mm').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document['timestamp']))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontStyle: FontStyle.italic),
                     ),
                     margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
                   )
@@ -322,7 +349,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   }
 
   bool isLastMessageLeft(int index) {
-    if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] == id) || index == 0) {
+    if ((index > 0 &&
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] == id) ||
+        index == 0) {
       return true;
     } else {
       return false;
@@ -330,7 +360,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   }
 
   bool isLastMessageRight(int index) {
-    if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] != id) || index == 0) {
+    if ((index > 0 &&
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] != id) ||
+        index == 0) {
       return true;
     } else {
       return false;
@@ -371,7 +404,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           buildLoading()
         ],
       ),
-     // onWillPop: onBackPress,
+      // onWillPop: onBackPress,
     );
   }
 
@@ -479,7 +512,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ),
       decoration: new BoxDecoration(
-          border: new Border(top: new BorderSide(color: Colors.grey, width: 0.5)), color: Colors.white),
+          border:
+              new Border(top: new BorderSide(color: Colors.grey, width: 0.5)),
+          color: Colors.white),
       padding: EdgeInsets.all(5.0),
       height: 180.0,
     );
@@ -490,7 +525,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       child: isLoading
           ? Container(
               child: Center(
-                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber)),
+                child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.amber)),
               ),
               color: Colors.white.withOpacity(0.8),
             )
@@ -525,7 +561,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             ),
             color: Colors.white,
           ),
-        
+
           // Edit text
           Flexible(
             child: Container(
@@ -547,7 +583,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               margin: new EdgeInsets.symmetric(horizontal: 8.0),
               child: new IconButton(
                 icon: new Icon(Icons.send),
-                onPressed: () => onSendMessage(textEditingController.text, 0),
+                onPressed: () async {
+                  onSendMessage(textEditingController.text, 0);
+                  //await chatRepository.recordAudio();
+                },
                 color: Colors.amber,
               ),
             ),
@@ -558,14 +597,18 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       width: double.infinity,
       height: 50.0,
       decoration: new BoxDecoration(
-          border: new Border(top: new BorderSide(color: Colors.grey, width: 0.5)), color: Colors.white),
+          border:
+              new Border(top: new BorderSide(color: Colors.grey, width: 0.5)),
+          color: Colors.white),
     );
   }
 
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId == ''
-          ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber)))
+          ? Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.amber)))
           : StreamBuilder(
               stream: Firestore.instance
                   .collection('messages')
@@ -577,12 +620,15 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
-                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber)));
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.amber)));
                 } else {
                   listMessage = snapshot.data.documents;
                   return ListView.builder(
                     padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
+                    itemBuilder: (context, index) =>
+                        buildItem(index, snapshot.data.documents[index]),
                     itemCount: snapshot.data.documents.length,
                     reverse: true,
                     controller: listScrollController,
