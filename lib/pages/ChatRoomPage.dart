@@ -385,6 +385,20 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: Image.asset(widget.peerAvatar),
+        title: Text(widget.peerId),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.phone),
+            onPressed: (){},
+          ),
+          IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: (){},
+          )
+        ],
+      ),
       body: Stack(
         children: <Widget>[
           Column(
